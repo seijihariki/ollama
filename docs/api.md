@@ -41,7 +41,7 @@ Generate a response for a given prompt with a provided model. This is a streamin
 
 Advanced parameters (optional):
 
-- `format`: the format to return a response in. Currently the only accepted value is `json`
+- `format`: the format to return a response in. Currently the only preset template is `json`. You can also provide a custom GBNF Grammar via this field.
 - `options`: additional model parameters listed in the documentation for the [Modelfile](./modelfile.md#valid-parameters-and-values) such as `temperature`
 - `system`: system prompt to (overrides what is defined in the `Modelfile`)
 - `template`: the full prompt or prompt template (overrides what is defined in the `Modelfile`)

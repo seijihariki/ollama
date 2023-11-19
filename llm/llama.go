@@ -27,34 +27,6 @@ import (
 	"github.com/jmorganca/ollama/format"
 )
 
-const jsonGrammar = `
-root   ::= object
-value  ::= object | array | string | number | ("true" | "false" | "null") ws
-
-object ::=
-  "{" ws (
-            string ":" ws value
-    ("," ws string ":" ws value)*
-  )? "}" ws
-
-array  ::=
-  "[" ws (
-            value
-    ("," ws value)*
-  )? "]" ws
-
-string ::=
-  "\"" (
-    [^"\\] |
-    "\\" (["\\/bfnrt] | "u" [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F] [0-9a-fA-F]) # escapes
-  )* "\"" ws
-
-number ::= ("-"? ([0-9] | [1-9] [0-9]*)) ("." [0-9]+)? ([eE] [-+]? [0-9]+)? ws
-
-# Optional space: by convention, applied in this grammar after literal chars when allowed
-ws ::= ([ \t\n] ws)?
-`
-
 //go:embed llama.cpp/*/build/*/bin/*
 var llamaCppEmbed embed.FS
 
@@ -561,8 +533,8 @@ func (llm *llama) Predict(ctx context.Context, prevContext []int, prompt string,
 		"stop":              llm.Stop,
 	}
 
-	if format == "json" {
-		request["grammar"] = jsonGrammar
+	if format != "" {
+		request["grammar"] = GetGrammar(format)
 	}
 
 	// Handling JSON marshaling with special characters unescaped.
